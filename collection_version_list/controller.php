@@ -24,6 +24,6 @@ class Controller extends Package
     public function install()
     {
         $pkg = parent::install();
-        SinglePage::add('/dashboard/system/collection_version_list/collection_version_list', $pkg);
+        SinglePage::add('/dashboard/collection_version_list/collection_version_list', $pkg);
     }
 }
