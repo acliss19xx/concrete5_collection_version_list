@@ -14,7 +14,7 @@ use Exception;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-class CollectionVersionList extends DashboardPageController {
+class Search extends DashboardPageController {
 
     public function on_start() {
         parent::on_start();
