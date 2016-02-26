@@ -1,7 +1,5 @@
 <?php
-
 namespace Concrete\Package\CollectionVersionList\Controller\SinglePage\Dashboard\CollectionVersionList;
-
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Page;
 use Concrete\Core\Page\Type;
@@ -16,33 +14,34 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class Search extends DashboardPageController {
 
-    public function on_start() {
-        parent::on_start();
+	public function on_start() {
+		parent::on_start();
         $this->requireAsset('css', 'core/frontend/pagination');
-    }
-
+	}
+	
     public function view() {
         $this->ptID = intval($this->request->query->get('ptID'));
-        $this->lastestversion = isset($_GET['lastestversion']) ? true : false;
+//        $this->ptID = intval($_GET['ptID']);
+        $this->lastestversion = isset($_GET['lastestversion']) ? true:false; 
         $list = new PageList();
         $list->sortByDisplayOrder();
-        if ($this->ptID > 0) {
+        if($this->ptID > 0){
             $list->filterByPageTypeID(intval($this->ptID));
         }
         $page_result = $list->getResults();
 
         $cv_list = array();
-        foreach ($page_result as $res) {
+        foreach($page_result as $res){
             $cv = new VersionList($res);
-            if (is_object($cv)) {
-                if ($this->lastestversion == true) {
+            if(is_object($cv)){
+                if($this->lastestversion == true){
                     $cvcheck = $cv->getPage(-1);
-                    if ($cvcheck[0]->cvIsApproved != 1) {
+                    if($cvcheck[0]->cvIsApproved != 1){
                         $cv_list[$res->getCollectionID()]['vObj'] = $cv->getPage(-1);
                         $cv_list[$res->getCollectionID()]['cName'] = $res->getCollectionName();
                         $cv_list[$res->getCollectionID()]['cID'] = $res->getCollectionID();
                     }
-                } else {
+                }else{
                     $cv_list[$res->getCollectionID()]['vObj'] = $cv->getPage(-1);
                     $cv_list[$res->getCollectionID()]['cName'] = $res->getCollectionName();
                     $cv_list[$res->getCollectionID()]['cID'] = $res->getCollectionID();
@@ -54,22 +53,22 @@ class Search extends DashboardPageController {
         $cvl->setItems($cv_list);
         $cvl->setItemsPerPage(10);
         $showPagination = false;
-        if ($cvl->getSummary()->pages > 1) {
+        if($cvl->getSummary()->pages > 1){
             $showPagination = true;
             $paginator = $cvl->getPagination();
         }
-        $this->set('paginator', $paginator);
-        $this->set('showPagination', $showPagination);
+        $this->set('paginator',$paginator);
+        $this->set('showPagination',$showPagination);
         $this->set('lastestversion', $this->lastestversion);
-
-        $this->set('cvlresult', $cvl->getPage());
+    
+        $this->set('cvlresult',$cvl->getPage());
         $this->set('ptID', $this->ptID);
         $pagetypes = \PageType::getList();
-        $this->set('pts', $pagetypes);
-    }
+        $this->set('pts',$pagetypes);
 
-    public function load_pagetype() {
+    }
+    
+    public function load_pagetype(){
         $this->view();
-    }
-
+   }
 }
