@@ -1,65 +1,40 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <form role="form" method="get" data-search-form="pagetypes" action="<?php echo $view->action('load_pagetype')?>" class="ccm-search-fields">
-	<div class="ccm-search-fields-row form-inline">
-    	<div class="form-group">
-    	    <div class="row">
-    	        <div class="col-sm-7">
-            	    <?php echo t('Page Types')?>:
-                    <select name="ptID">
-                        <option value ="0" <?php echo $ptID == 0 ? 'selected':''?> ><?php echo t('None')?></option>
-                        <?php foreach($pts as $pt){ ?>
-                            <option value ="<?php echo $pt->ptID?>" <?php echo $pt->ptID == $ptID ? 'selected':''?> ><?php echo h(t($pt->ptName))?></option>
-                        <?php } ?>
-                    </select>
-    	        </div>
-    	        <div class="col-sm-5">
-    	            <input type="checkbox" name="lastestversion" value="1" <?php echo $lastestversion ? "checked":""?>><?php echo t('If latest version is not approved')?>
-    	        </div>
-    	    </div>
+	<div class="ccm-search-fields-row ">
+
+        <div class="form-group">
+            <label class="control-label"><?php echo t('Parent Page')?></label>
+            <?php
+                echo Core::make('helper/form/page_selector')->selectPage('cParentID', $cParentID); 
+            ?>
         </div>
+    </div>
+
+	<div class="ccm-search-fields-row ">
+    	<div class="form-group">
+            <label class="control-label"><?php echo t('Page Types')?></label>
+            <select name="ptID">
+                <option value ="0" <?php echo $ptID == 0 ? 'selected':''?> ><?php echo t('None')?></option>
+                <?php foreach($pts as $pt){ ?>
+                    <option value ="<?php echo $pt->ptID?>" <?php echo $pt->ptID == $ptID ? 'selected':''?> ><?php echo h(t($pt->ptName))?></option>
+                <?php } ?>
+            </select>
+        </div>
+    </div>
+	<div class="ccm-search-fields-row ">
+
+    	<div class="checkbox">
+    	    <label>
+                <input type="checkbox" name="lastestversion" value="1" <?php echo $lastestversion ? "checked":""?>> <?php echo t('If latest version is not approved')?>
+    	    </label>
+    	</div>
     </div>
 	<button type="submit" class="btn btn-primary pull-right"><?php echo t('Search')?></button>
 </form>
-<script type="text/javascript">
-/*
-    $('form').submit(function(event){
-        event.preventDefault();
-        $.ajax({
-            type : 'post',
-            datatype: 'json',
-            url : $(this).attr('action'),
-            data: $(this).serialize(),
-            complete: function(data){
-                console.log("aa");
-            }
-        });
-    });
-*/
-</script>
-<script type="text/javascript">
-    (function(){
-        ptitem = <?php echo json_encode($pts)?>;
-        var temp = $('#test_pagetype').text();
-        var compiled = _.template(temp, ptitem);
-        var pt = {"ptitem": ptitem};
-//    $('#ccm-page-type-search').html(compiled(pt));
-    });
-</script>
-
-<script type="text/template" id="test_pagetype">
-    _.each(ptitem,function(data){
-        <p><%- data.ptName %>---<%- data.ptID %></p>
-    });
-</script>
-
-<div id ="ccm-page-type-search">
-    
-</div>
 
 <table class="table table-responsive">
 <?php
-// $page_result = json_decode(json_encode($page_result));
 foreach($cvlresult as $cvl){
     $page = Page::getByID($cvl['cID']);
     $cp = new Permissions($page);
@@ -112,14 +87,11 @@ foreach($cvlresult as $cvl){
 <?php } ?>
 </table>
 <?php if ($showPagination): ?>
-            <div class="ccm-search-results-pagination">
-                <ul class="pagination">
-                    <li class="prev"><?php echo $paginator->getPrevious() ?></li>
-
-                    <?php // Call to pagination helper's 'getPages' method with new $wrapper var ?>
-                    <?php echo $paginator->getPages('li') ?>
-
-                    <li class="next"><?php echo $paginator->getNext() ?></li>
-                </ul>
-            </div>
+    <div class="ccm-search-results-pagination">
+        <ul class="pagination">
+            <li class="prev"><?php echo $paginator->getPrevious() ?></li>
+            <?php echo $paginator->getPages('li') ?>
+            <li class="next"><?php echo $paginator->getNext() ?></li>
+        </ul>
+    </div>
 <?php endif; ?>
