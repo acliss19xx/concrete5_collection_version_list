@@ -16,17 +16,19 @@ class Search extends DashboardPageController {
 
 	public function on_start() {
 		parent::on_start();
-        $this->requireAsset('css', 'core/frontend/pagination');
 	}
 	
     public function view() {
         $this->ptID = intval($this->request->query->get('ptID'));
-//        $this->ptID = intval($_GET['ptID']);
+        $this->cParentID = intval($this->request->query->get('cParentID'));
         $this->lastestversion = isset($_GET['lastestversion']) ? true:false; 
         $list = new PageList();
         $list->sortByDisplayOrder();
         if($this->ptID > 0){
             $list->filterByPageTypeID(intval($this->ptID));
+        }
+        if($this->cParentID != 0){
+            $list->filterByPath(Page::getByID($this->cParentID)->getCollectionPath());
         }
         $page_result = $list->getResults();
 
@@ -57,6 +59,7 @@ class Search extends DashboardPageController {
             $showPagination = true;
             $paginator = $cvl->getPagination();
         }
+        $this->set('cParentID',$this->cParentID);
         $this->set('paginator',$paginator);
         $this->set('showPagination',$showPagination);
         $this->set('lastestversion', $this->lastestversion);
