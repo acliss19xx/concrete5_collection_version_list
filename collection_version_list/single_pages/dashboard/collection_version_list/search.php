@@ -14,7 +14,7 @@
 	<div class="ccm-search-fields-row ">
     	<div class="form-group">
             <label class="control-label"><?php echo t('Page Types')?></label>
-            <select name="ptID">
+            <select name="ptID" class="form-control">
                 <option value ="0" <?php echo $ptID == 0 ? 'selected':''?> ><?php echo t('None')?></option>
                 <?php foreach($pts as $pt){ ?>
                     <option value ="<?php echo $pt->ptID?>" <?php echo $pt->ptID == $ptID ? 'selected':''?> ><?php echo h(t($pt->ptName))?></option>
