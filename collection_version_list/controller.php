@@ -19,7 +19,7 @@ class Controller extends Package
      
     public function getPackageName()
     {
-        return t("Acliss collection version list");
+        return t("collection version list");
     }
     public function install()
     {

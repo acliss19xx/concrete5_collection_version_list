@@ -9,6 +9,9 @@ use \Concrete\Core\Legacy\ItemList;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use Loader;
 use Exception;
+use Permissions;
+use Core;
+
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
@@ -33,20 +36,26 @@ class Search extends DashboardPageController {
         $page_result = $list->getResults();
 
         $cv_list = array();
+        $nh = Core::make('helper/navigation');
         foreach($page_result as $res){
-            $cv = new VersionList($res);
-            if(is_object($cv)){
-                if($this->lastestversion == true){
-                    $cvcheck = $cv->getPage(-1);
-                    if($cvcheck[0]->cvIsApproved != 1){
+            $cp = new Permissions($res);
+            if($cp->canViewPageVersions()){
+                $cv = new VersionList($res);
+                if(is_object($cv)){
+                    if($this->lastestversion == true){
+                        $cvcheck = $cv->getPage(-1);
+                        if($cvcheck[0]->cvIsApproved != 1){
+                            $cv_list[$res->getCollectionID()]['vObj'] = $cv->getPage(-1);
+                            $cv_list[$res->getCollectionID()]['cName'] = $res->getCollectionName();
+                            $cv_list[$res->getCollectionID()]['cID'] = $res->getCollectionID();
+                            $cv_list[$res->getCollectionID()]['link'] = $nh->getLinkToCollection($res);
+                        }
+                    }else{
                         $cv_list[$res->getCollectionID()]['vObj'] = $cv->getPage(-1);
                         $cv_list[$res->getCollectionID()]['cName'] = $res->getCollectionName();
                         $cv_list[$res->getCollectionID()]['cID'] = $res->getCollectionID();
+                        $cv_list[$res->getCollectionID()]['link'] = $nh->getLinkToCollection($res);
                     }
-                }else{
-                    $cv_list[$res->getCollectionID()]['vObj'] = $cv->getPage(-1);
-                    $cv_list[$res->getCollectionID()]['cName'] = $res->getCollectionName();
-                    $cv_list[$res->getCollectionID()]['cID'] = $res->getCollectionID();
                 }
             }
         }

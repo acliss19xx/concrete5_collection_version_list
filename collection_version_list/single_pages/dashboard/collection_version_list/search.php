@@ -36,54 +36,48 @@
 <table class="table table-responsive">
 <?php
 foreach($cvlresult as $cvl){
-    $page = Page::getByID($cvl['cID']);
-    $cp = new Permissions($page);
-    if($cp->canViewPageVersions()){
-    ?>
-        <tr><td>
-            <div class="row">
-                <div class="col-sm-3">
-                    <h4><?php echo h($page->getCollectionName())?></h4>
-                    <ul>
-                        <li>
-                            <?php $nh = Core::make('helper/navigation'); ?>
-                            <a href="<?php echo $nh->getLinkToCollection($page)?>"><?php echo t('Visit')?></a>
-                        </li>
-                        <li><a class="dialog-launch" dialog-width="640" dialog-height="340"
-                           dialog-modal="false" dialog-title="<?php echo t('Versions') ?>" href="<?php echo URL::to(
-                            '/ccm/system/panels/page/versions') ?>?cID=<?php echo $page->getCollectionID() ?>"><?php echo t('Versions')?></a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-sm-9">
-                    <div data-search-element="results">
-                        <div class="table-responsive">
-                            <table  id="ccm-collectionversioncheck" class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="col-sm-2"><span><?php echo t('Version')?></span></th>       
-                                        <th class="col-sm-6"><span><?php echo t('Comments')?></span></th>            
-                                        <th class="col-sm-4"><span><?php echo t('Modified')?></span></th>            
-                                    </tr>
-                                </thead>
-                                <?php
-                                foreach($cvl['vObj'] as $cv){
-                                ?>
-                                    <tr class="<?php echo $cv->cvIsApproved == 1 ? 'success' : ''?>">
-                                        <td><?php echo h($cv->cvID);?> </td>
-                                        <td><?php echo h(substr($cv->cvComments,0,20)) ;?> </td>
-                                        <td><?php echo h($cv->cvDateCreated);?> </td>
-                                    </tr>
-                                <?php
-                                }
-                                ?>
-                            </table>
-                        </div>
+?>
+    <tr><td>
+        <div class="row">
+            <div class="col-sm-3">
+                <h4><?php echo h($cvl['cName'])?></h4>
+                <ul>
+                    <li>
+                        <?php $nh = Core::make('helper/navigation'); ?>
+                        <a href="<?php echo $cvl['link'] ?>"><?php echo t('Visit')?></a>
+                    </li>
+                    <li><a class="dialog-launch" dialog-width="640" dialog-height="340"
+                       dialog-modal="false" dialog-title="<?php echo t('Versions') ?>" href="<?php echo URL::to(
+                        '/ccm/system/panels/page/versions') ?>?cID=<?php echo $cvl['cID']?>"><?php echo t('Versions')?></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-9">
+                <div data-search-element="results">
+                    <div class="table-responsive">
+                        <table  id="ccm-collectionversioncheck" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="col-sm-2"><span><?php echo t('Version')?></span></th>       
+                                    <th class="col-sm-6"><span><?php echo t('Comments')?></span></th>            
+                                    <th class="col-sm-4"><span><?php echo t('Modified')?></span></th>            
+                                </tr>
+                            </thead>
+                            <?php
+                            foreach($cvl['vObj'] as $cv){
+                            ?>
+                                <tr class="<?php echo $cv->cvIsApproved == 1 ? 'success' : ''?>">
+                                    <td><?php echo h($cv->cvID);?> </td>
+                                    <td><?php echo h(substr($cv->cvComments,0,20)) ;?> </td>
+                                    <td><?php echo h($cv->cvDateCreated);?> </td>
+                                </tr>
+                            <?php } ?>
+                        </table>
                     </div>
                 </div>
             </div>
-        </td></tr>
-    <?php } ?>
+        </div>
+    </td></tr>
 <?php } ?>
 </table>
 <?php if ($showPagination): ?>
