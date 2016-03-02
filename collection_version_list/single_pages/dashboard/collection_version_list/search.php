@@ -43,7 +43,6 @@ foreach($cvlresult as $cvl){
                 <h4><?php echo h($cvl['cName'])?></h4>
                 <ul>
                     <li>
-                        <?php $nh = Core::make('helper/navigation'); ?>
                         <a href="<?php echo $cvl['link'] ?>"><?php echo t('Visit')?></a>
                     </li>
                     <li><a class="dialog-launch" dialog-width="640" dialog-height="340"
